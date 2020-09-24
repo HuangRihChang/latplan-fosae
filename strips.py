@@ -200,7 +200,7 @@ def show_summary(ae,train,test):
 
 ################################################################
 
-def puzzle(aeclass="FirstOrderAE",type='mnist',width=3,height=3,U=None,A=None,P=None,num_examples=6500,comment=None):
+def puzzle(aeclass="FirstOrderSAE",type='mnist',width=3,height=3,U=None,A=None,P=None,num_examples=6500,comment=None):
     for name, value in locals().items():
         if value is not None:
             parameters[name] = [value]
@@ -223,8 +223,8 @@ def puzzle(aeclass="FirstOrderAE",type='mnist',width=3,height=3,U=None,A=None,P=
     configs = pre_configs
     objects = p.to_objects(configs, width, height, False)
     train = objects[:int(len(objects)*0.9)]
-    val   = data[int(len(data)*0.9):int(len(data)*0.95)]
-    test  = data[int(len(data)*0.95):]
+    val   = objects[int(len(objects)*0.9):int(len(objects)*0.95)]
+    test  = objects[int(len(objects)*0.95):]
 
     ae = run(os.path.join("samples",sae_path), train, val, parameters)
     show_summary(ae, train, test)
