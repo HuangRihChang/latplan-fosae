@@ -1,6 +1,3 @@
-
-[[./img/latplanlogo-simple.svg.png]]
-
 * LatPlan FOSAE
 
 This repository contains a reimplementation of First Order State Autoencoder in the following paper:
