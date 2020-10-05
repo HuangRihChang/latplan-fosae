@@ -16,7 +16,7 @@ export PYTHONUNBUFFERED=1
 
 proj=$(date +%Y%m%d%H%M)-$prefix
 common="jbsub -mem 64g -cores 1+1 -queue x86_6h -proj $proj -require v100"
-parallel $common ./strips.py reproduce_plot blocksworld {} \
+parallel ./strips.py reproduce_plot blocksworld {} \
          ::: FirstOrderSAE \
          ::: $prefix \
          ::: None \

@@ -212,7 +212,12 @@ def _crossover(parent1,parent2):
     return child
 
 def _inverse_weighted_select(lst):
-    weights = [ 1/entry[0] for entry in lst ]
+    weights = []
+    for entry in lst:
+        if  entry[0] == 0:
+            weights.append(0)
+        else:
+            weights.append(1/entry[0]) 
     cum_weights = []
     cum = 0.0
     for w in weights:

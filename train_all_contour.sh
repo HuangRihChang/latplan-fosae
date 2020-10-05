@@ -13,10 +13,10 @@ common="jbsub -mem 8g -cores 1+1 -queue x86_6h -proj $(date +%Y%m%d%H%M)"
 export PYTHONUNBUFFERED=1
 
 # A=1-4, U=1-20, P=1-20
-parallel $common ./strips.py learn_plot puzzle FirstOrderAE mnist 3 3 {} 20000 ::: $(seq 1 20) ::: $(seq 1 4) ::: $(seq 1 20)
+parallel ./strips.py learn_plot puzzle FirstOrderAE mnist 3 3 {} 20000 ::: $(seq 1 20) ::: $(seq 1 4) ::: $(seq 1 20)
 
 # A=9 (see all args), U=1, P=1-400
-parallel $common ./strips.py learn_plot puzzle FirstOrderAE mnist 3 3 {} 20000 ::: 1 ::: 9 ::: $(seq 1 400)
+parallel ./strips.py learn_plot puzzle FirstOrderAE mnist 3 3 {} 20000 ::: 1 ::: 9 ::: $(seq 1 400)
 
 common="jbsub -mem 32g -cores 1 -queue x86_1h -proj $(date +%Y%m%d%H%M)"
 
