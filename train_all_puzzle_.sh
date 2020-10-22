@@ -6,19 +6,21 @@ trap exit SIGINT
 
 ulimit -v 16000000000
 
-# export PYTHONUNBUFFERED=1
+export PYTHONUNBUFFERED=1
+
+python ./strips.py learn_plot puzzle {} FirstOrderSAE mnist 3 3 None None None 20000
 
 # proj=$(date +%Y%m%d%H%M)-puzzle
 # common="jbsub -mem 64g -cores 1+1 -queue x86_6h -proj $proj -require v100"
-parallel ./strips.py learn_plot puzzle {} \
-         ::: FirstOrderSAE \
-         ::: mnist \
-         ::: 3 \
-         ::: 3 \
-         ::: None \
-         ::: None \
-         ::: None \
-         ::: 20000
+# parallel ./strips.py learn_plot puzzle {} \
+#          ::: FirstOrderSAE \
+#          ::: mnist \
+#          ::: 3 \
+#          ::: 3 \
+#          ::: None \
+#          ::: None \
+#          ::: None \
+#          ::: 20000
 
 
 # ccc/watch-proj $proj && {

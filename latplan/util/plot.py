@@ -24,8 +24,8 @@ def plot_grid(images,w=10,path="plan.png",verbose=False):
 # contiguous image
 def plot_grid2(images,w=10,path="plan.png",verbose=False):
     import matplotlib.pyplot as plt
-    l = images.shape[0]
-    h = int(math.ceil(l/w))
+    # l = images.shape[0]
+    h = int(math.ceil(images.shape[0]/w))
     margin = 3
     m_shape = (margin + np.array(images.shape[1:]))
     all_shape = m_shape * np.array((h,w))

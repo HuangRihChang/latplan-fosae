@@ -3,30 +3,30 @@
 import config
 import numpy as np
 import numpy.random as random
+import keras.backend as K
+import tensorflow as tf
+import os, os.path, sys
+
+import importlib
+
+from keras.optimizers import Adam
+from keras_adabound   import AdaBound
+from keras_radam      import RAdam
+import keras.optimizers
+
 import latplan
 import latplan.model
 from latplan.util        import curry
 from latplan.util.tuning import *
 from latplan.util.noise  import gaussian
 
-import keras.backend as K
-import tensorflow as tf
 
-import os
-import os.path
 
 float_formatter = lambda x: "%.5f" % x
-import sys
 np.set_printoptions(formatter={'float_kind':float_formatter})
 
 mode     = 'learn_dump'
 sae_path = None
-
-from keras.optimizers import Adam
-from keras_adabound   import AdaBound
-from keras_radam      import RAdam
-
-import keras.optimizers
 
 setattr(keras.optimizers,"radam", RAdam)
 setattr(keras.optimizers,"adabound", AdaBound)
@@ -46,6 +46,7 @@ default_parameters = {
     'test_softmax'    : False,   # if true, latent output is continuous
     'dropout_z'       : False,
 }
+
 # hyperparameter tuning
 parameters = {
     'beta'       :[-0.3,-0.1,0.0,0.1,0.3],
@@ -200,7 +201,12 @@ def show_summary(ae,train,test):
 
 ################################################################
 
-def puzzle(aeclass="FirstOrderSAE",type='mnist',width=3,height=3,U=None,A=None,P=None,num_examples=6500,comment=None):
+def puzzle( aeclass="FirstOrderSAE", type='mnist',
+            width = 3, height = 3,
+            U=None,A=None,P=None,
+            num_examples=6500,
+            comment=None):
+    
     for name, value in locals().items():
         if value is not None:
             parameters[name] = [value]
@@ -212,13 +218,12 @@ def puzzle(aeclass="FirstOrderSAE",type='mnist',width=3,height=3,U=None,A=None,P
     parameters["preencoder_layers"]    = [0.0] # disable object embedding
     parameters["preencoder_l1"]        = [0.0] # disable object embedding
 
-    import importlib
     p = importlib.import_module('latplan.puzzles.puzzle_{}'.format(type))
     p.setup()
     path = os.path.join(latplan.__path__[0],"puzzles","-".join(map(str,["puzzle",type,width,height]))+".npz")
     with np.load(path) as data:
         pre_configs = data['pres'][:num_examples]
-        suc_configs = data['sucs'][:num_examples]
+        # suc_configs = data['sucs'][:num_examples]
 
     configs = pre_configs
     objects = p.to_objects(configs, width, height, False)
@@ -232,8 +237,10 @@ def puzzle(aeclass="FirstOrderSAE",type='mnist',width=3,height=3,U=None,A=None,P
 
     dump_states (ae,objects)
     dump_actions(ae,p.object_transitions(width, height, configs=configs, one_per_state=True))
-    dump_all_states (ae,all_configs,        lambda configs: p.to_objects(configs,width,height),)
-    dump_all_actions(ae,all_configs,        lambda configs: p.object_transitions(width,height,configs),)
+    dump_all_states (ae,configs, lambda configs: p.to_objects(configs,width,height),) # TODO: all_configs
+    dump_all_actions(ae,configs, lambda configs: p.object_transitions(width,height,configs),) # TODO: all_configs
+
+
 
 def bboxes_to_onehot(bboxes,X,Y):
     batch, objs = bboxes.shape[0:2]
@@ -250,6 +257,8 @@ def bboxes_to_onehot(bboxes,X,Y):
     bboxes_onehot = np.concatenate((x1o,y1o,x2o,y2o),axis=-1)
     del x1,y1,x2,y2,x1o,y1o,x2o,y2o
     return bboxes_onehot
+
+
 
 def blocksworld(aeclass="FirstOrderAE",track="blocks-5-3",U=None,A=None,P=None,num_examples=6500,comment=None):
     for name, value in locals().items():
@@ -320,6 +329,9 @@ def main():
         gs = globals()
         print({ k for k in gs if hasattr(gs[k], '__call__')})
     else:
+
+#./strips.py learn_plot puzzle {} ::: FirstOrderSAE ::: mnist ::: 3 ::: 3 ::: None ::: None ::: None ::: 20000
+
         print('args:',sys.argv)
         sys.argv.pop(0)
         mode = sys.argv.pop(0)
@@ -334,9 +346,15 @@ def main():
         
         globals()[task](*map(myeval,sys.argv))
     
-if __name__ == '__main__':
-    try:
-        main()
-    except:
-        import latplan.util.stacktrace
-        latplan.util.stacktrace.format()
+# if __name__ == '__main__':
+#     try:
+#         main()
+#     except:
+#         import latplan.util.stacktrace
+#         latplan.util.stacktrace.format()
+
+try:
+    main()
+except:
+    import latplan.util.stacktrace
+    latplan.util.stacktrace.format()

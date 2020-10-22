@@ -3,6 +3,10 @@
 import config
 import numpy as np
 import random
+
+import os
+import os.path
+
 import latplan
 import latplan.model
 from latplan.util        import curry
@@ -12,8 +16,7 @@ from latplan.util.noise  import gaussian
 import keras.backend as K
 import tensorflow as tf
 
-import os
-import os.path
+
 
 float_formatter = lambda x: "%.5f" % x
 import sys

@@ -203,15 +203,21 @@ def transitions(width, height, configs=None, one_per_state=False, **kwargs):
         suc = generate(transitions[:,1,:],width,height, **kwargs)
         return np.array([pre, suc])
 
+
+
 def generate_configs(digit=9):
     import itertools
     return itertools.permutations(range(digit))
+
+
 
 def generate_random_configs(digit=9,sample=10000):
     results = np.zeros((sample,digit))
     for i in range(sample):
         results[i] = np.random.permutation(digit)
     return results
+
+
 
 def successors(config,width,height):
     pos = config[0]
@@ -248,6 +254,7 @@ def successors(config,width,height):
             c[other] -= width
             succ.append(c)
         return succ
+
     except StopIteration:
         board = np.zeros((height,width))
         for i in range(height*width):

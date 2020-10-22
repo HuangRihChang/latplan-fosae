@@ -6,14 +6,14 @@ from .split_image import split_image
 from .util import preprocess
 import os
 
-def setup():
-    setting['base'] = 14
+def setup(base=14):
+    setting['base'] = base
 
     def loader(width,height):
         from ..util.mnist import mnist
         base = setting['base']
         x_train, y_train, _, _ = mnist()
-        filters = [ np.equal(i,y_train) for i in range(9) ]
+        filters = [np.equal(i,y_train) for i in range(9)]
         imgs    = [ x_train[f] for f in filters ]
         panels  = [ imgs[0].reshape((28,28)) for imgs in imgs ]
         panels[8] = imgs[8][3].reshape((28,28))

@@ -11,25 +11,22 @@ import latplan.puzzles.hanoi as p
 import itertools
 c = [ c for c in itertools.islice(p.generate_configs(4,3), 10000) ]
 
-from colors import color
 from functools import partial
-
-style = partial(color, fg='black', bg='white')
 
 from latplan.util.timer import Timer
 
-with Timer(style("************************* states on cpu ***************************")):
+with Timer("************************* states on cpu ***************************"):
     s = p.generate(c,4,3)
 
 print(s[:3])
 
-with Timer(style("************************* validate_states ***************************")):
+with Timer("************************* validate_states ***************************"):
     print("results:", np.all(p.validate_states(s)), "(should be True)")
 
-with Timer(style("************************* validate_states with noise ***************************")):
+with Timer("************************* validate_states with noise ***************************"):
     print("results:", np.all(p.validate_states(np.clip(s+np.random.normal(0,0.1,s.shape),0,1))), "(should be True)")
 
-with Timer(style("************************* to_configs on gpu, batch=100 ***************************")):
+with Timer("************************* to_configs on gpu, batch=100 ***************************"):
     p.to_configs(s,batch_size=100)
     
 

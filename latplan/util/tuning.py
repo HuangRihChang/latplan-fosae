@@ -140,8 +140,7 @@ def _all_configs(parameters):
         yield { k:v for k,v in zip(names,config_values) }
 
 def _final_report(best):
-    from colors import bold
-    print(bold("*** Best parameter: ***\n{}\neval: {}".format(best['params'],best['eval'])))
+    print("*** Best parameter: ***\n{}\neval: {}".format(best['params'],best['eval']))
     return
 
 def grid_search(task, default_config, parameters, path,
