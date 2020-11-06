@@ -165,16 +165,17 @@ def run(path,train,val,parameters,train_out=None,val_out=None,):
             train_out = train
         if val_out is None:
             val_out = val
+        
         ae, _, _ = simple_genetic_search(
-            curry(nn_task, latplan.model.get(default_parameters["aeclass"]),
+            cu  rry(nn_task, latplan.model.get(default_parameters["aeclass"]),
                   path,
                   train, train_out, val, val_out), # noise data is used for tuning metric
             default_parameters,
             parameters,
             path,
             limit=300,
-            report_best= lambda net: net.save(),
-        )
+            report_best= lambda net: net.save())
+
     elif 'reproduce' in mode:   # reproduce the best result from the grid search log
         if train_out is None:
             train_out = train
@@ -337,6 +338,7 @@ def main():
         mode = sys.argv.pop(0)
         sae_path = "_".join(sys.argv)
         task = sys.argv.pop(0)
+        print(mode, sae_path, task)
 
         def myeval(str):
             try:
@@ -345,13 +347,6 @@ def main():
                 return str
         
         globals()[task](*map(myeval,sys.argv))
-    
-# if __name__ == '__main__':
-#     try:
-#         main()
-#     except:
-#         import latplan.util.stacktrace
-#         latplan.util.stacktrace.format()
 
 try:
     main()

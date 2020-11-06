@@ -391,7 +391,7 @@ class ScheduledVariable:
         
     def value(self,epoch):
         """Should return a scalar value based on the current epoch.
-Each subclasses should implement a method for it."""
+        Each subclasses should implement a method for it."""
         pass
     
     def update(self, epoch, logs):
@@ -491,7 +491,7 @@ class StepSchedule(BaseSchedule):
        |
    ____|
 
-"""
+    """
     def value(self,epoch):
         assert epoch >= 0
         pkey = None
@@ -511,9 +511,9 @@ class LinearSchedule(BaseSchedule):
           ______
          /
         /
-   ____/
+    ____/
 
-"""
+    """
     def value(self,epoch):
         assert epoch >= 0
         pkey = None
@@ -542,8 +542,6 @@ class DynamicMessage(progressbar.DynamicMessage):
             return self.name + ': ' + '{}'.format(val)
         else:
             return self.name + ': ' + 6 * '-'
-
-
 
 from keras.constraints import Constraint, maxnorm,nonneg,unitnorm
 class UnitNormL1(Constraint):

@@ -1923,7 +1923,6 @@ class DetActionMixin:
 
 
 # effect mapping variations
-
 class DirectLossMixin:
     "Additional loss for the latent space successor prediction."
     def _build(self,input_shape):
@@ -2056,7 +2055,6 @@ class ConditionalEffectMixin(BaseActionMixin,DirectLossMixin,HammingLoggerMixin)
         self.apply  = Model([pre2,act2], ConditionalSequential(self.action_decoder_net, pre2, axis=1)(flatten(act2)))
         return
 
-
 class BoolMinMaxEffectMixin(ActionDumpMixin,BaseActionMixin,DirectLossMixin,HammingLoggerMixin):
     "The effect depends only on the action labels. Add/delete effects are directly modeled as binary min/max."
     def _apply(self,z_pre,z_suc,action):
@@ -2087,7 +2085,6 @@ class BoolMinMaxEffectMixin(ActionDumpMixin,BaseActionMixin,DirectLossMixin,Hamm
         del2     = wrap(eff2, eff2[...,1])
         self.apply  = Model([pre2,act2], wrap(pre2, K.minimum(1-del2, K.maximum(add2, pre2))))
         return
-
 
 class BoolSmoothMinMaxEffectMixin(ActionDumpMixin,BaseActionMixin,DirectLossMixin,HammingLoggerMixin):
     "The effect depends only on the action labels. Add/delete effects are directly modeled as binary smooth min/max."
@@ -2245,7 +2242,6 @@ class LogitAddEffect2Mixin(ActionDumpMixin,BaseActionMixin,DirectLossMixin,Hammi
 
 
 # Zero-sup SAE ###############################################################
-
 class ConvolutionalStateAE(ConvolutionalEncoderMixin, ConcreteLatentMixin, StateAE):
     pass
 class Convolutional2StateAE(ConvolutionalDecoderMixin, ConvolutionalEncoderMixin, ConcreteLatentMixin, StateAE):
@@ -2258,7 +2254,6 @@ class ZeroSuppressConvolutionalStateAE(ZeroSuppressMixin, ConvolutionalEncoderMi
 class ZeroSuppressConvolutional2StateAE(ZeroSuppressMixin, ConvolutionalDecoderMixin, ConvolutionalEncoderMixin, ConcreteLatentMixin, StateAE):
     pass
 # Transition SAE ################################################################
-
 class VanillaTransitionAE(              ZeroSuppressMixin, ConcreteLatentMixin, TransitionAE):
     pass
 
@@ -2269,7 +2264,6 @@ class CosineTransitionAE (CosineMixin,  ZeroSuppressMixin, ConcreteLatentMixin, 
     pass
 class PoissonTransitionAE(PoissonMixin, ZeroSuppressMixin, ConcreteLatentMixin, TransitionAE):
     pass
-
 
 # IJCAI2020 papers
 class ConcreteDetConditionalEffectTransitionAE              (HammingMixin, ZeroSuppressMixin, ConcreteLatentMixin, DetActionMixin, ConditionalEffectMixin, TransitionAE):
@@ -2452,19 +2446,19 @@ def combined_sd(states,sae,cae,sd3,**kwargs):
 class ActionAE(AE):
     """A network which autoencodes the difference information.
 
-State transitions are not a 1-to-1 mapping in a sense that
-there are multiple applicable actions. So you cannot train a newtork that directly learns
-a transition S -> T .
+    State transitions are not a 1-to-1 mapping in a sense that
+    there are multiple applicable actions. So you cannot train a newtork that directly learns
+    a transition S -> T .
 
-We also do not have action labels, so we need to cluster the actions in an unsupervised manner.
+    We also do not have action labels, so we need to cluster the actions in an unsupervised manner.
 
-This network trains a bidirectional mapping of (S,T) -> (S,A) -> (S,T), given that 
-a state transition is a function conditioned by the before-state s.
+    This network trains a bidirectional mapping of (S,T) -> (S,A) -> (S,T), given that 
+    a state transition is a function conditioned by the before-state s.
 
-It is not useful to learn a normal autoencoder (S,T) -> Z -> (S,T) because we cannot separate the
-condition and the action label.
+    It is not useful to learn a normal autoencoder (S,T) -> Z -> (S,T) because we cannot separate the
+    condition and the action label.
 
-We again use gumbel-softmax for representing A."""
+    We again use gumbel-softmax for representing A."""
     def build_encoder(self,input_shape):
         return [
             *[
