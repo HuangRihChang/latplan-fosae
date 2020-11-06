@@ -167,7 +167,7 @@ def run(path,train,val,parameters,train_out=None,val_out=None,):
             val_out = val
         
         ae, _, _ = simple_genetic_search(
-            cu  rry(nn_task, latplan.model.get(default_parameters["aeclass"]),
+                  curry(nn_task, latplan.model.get(default_parameters["aeclass"]),
                   path,
                   train, train_out, val, val_out), # noise data is used for tuning metric
             default_parameters,
@@ -338,7 +338,6 @@ def main():
         mode = sys.argv.pop(0)
         sae_path = "_".join(sys.argv)
         task = sys.argv.pop(0)
-        print(mode, sae_path, task)
 
         def myeval(str):
             try:
@@ -347,6 +346,13 @@ def main():
                 return str
         
         globals()[task](*map(myeval,sys.argv))
+    
+# if __name__ == '__main__':
+#     try:
+#         main()
+#     except:
+#         import latplan.util.stacktrace
+#         latplan.util.stacktrace.format()
 
 try:
     main()
